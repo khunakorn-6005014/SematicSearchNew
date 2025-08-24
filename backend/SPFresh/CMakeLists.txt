@@ -111,7 +111,7 @@ if (Boost_FOUND)
     message (STATUS "Library Path: ${Boost_LIBRARY_DIRS}")
     message (STATUS "Library: ${Boost_LIBRARIES}")
 else()
-    message (FATAL_ERROR "Could not find Boost >= 1.66!")
+    message (FATAL_ERROR "Could not find Boost >= 1.67!")
 endif()
 
 option(GPU "GPU" ON)
@@ -123,11 +123,11 @@ if (ROCKSDB)
 endif()
 
 add_subdirectory (ThirdParty/zstd/build/cmake)
+
 add_subdirectory (AnnService)
 add_subdirectory (Test)
 add_subdirectory (GPUSupport)
 add_subdirectory (Wrappers)
-
 #
 # === SPFresh wrapper targets ===
 # Position-independent code helps when statics are linked into shared libs (Linux)
@@ -136,29 +136,32 @@ set(SPFRESH_SRC
     src/spfresh_c_api.cpp
 )
 
-add_library(spfresh STATIC ${SPFRESH_SRC})
-set_target_properties(spfresh PROPERTIES POSITION_INDEPENDENT_CODE ON)
+add_library(spfresh_lib STATIC ${SPFRESH_SRC})
+set_target_properties(spfresh_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
-target_include_directories(spfresh
+target_include_directories(spfresh_lib
     PUBLIC
         ${SPFRESH_HDR_DIR}
         ${CMAKE_CURRENT_SOURCE_DIR}/Include  # SPTAG headers (if you include them later)
 )
 
 # If your wrapper calls into SPTAG core, link it here. Replace AnnService if different.
-target_link_libraries(spfresh
+target_link_libraries(spfresh_lib
     PUBLIC
         AnnService
 )
-
-
 
 # Optionally build a shared library with the same interface
 option(SPFRESH_BUILD_SHARED "Build SPFresh as a shared library" OFF)
 if (SPFRESH_BUILD_SHARED)
     add_library(spfresh_shared SHARED ${SPFRESH_SRC})
-    set_target_properties(spfresh_shared PROPERTIES POSITION_INDEPENDENT_CODE ON)
-    target_include_directories(spfresh_shared PUBLIC ${SPFRESH_HDR_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/Include)
-    target_link_libraries(spfresh_shared PUBLIC AnnService)
+    set_target_properties(spfresh_shared PROPERTIES   
+         POSITION_INDEPENDENT_CODE ON
+    )
+    target_include_directories(spfresh_shared 
+        PUBLIC 
+            ${SPFRESH_HDR_DIR} 
+            ${CMAKE_CURRENT_SOURCE_DIR}/Include)
+    target_link_libraries(spfresh_shared 
+        PUBLIC AnnService)
 endif()
-

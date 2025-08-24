@@ -1,0 +1,2 @@
+/usr/bin/ar qc /home/rexstream31319/SematicSearchNew/backend/SPFresh/Release/libspfresh_lib.a CMakeFiles/spfresh_lib.dir/src/spfresh_c_api.cpp.o
+/usr/bin/ranlib /home/rexstream31319/SematicSearchNew/backend/SPFresh/Release/libspfresh_lib.a
