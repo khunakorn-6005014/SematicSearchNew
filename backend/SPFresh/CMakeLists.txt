@@ -128,22 +128,25 @@ add_subdirectory (AnnService)
 add_subdirectory (Test)
 add_subdirectory (GPUSupport)
 add_subdirectory (Wrappers)
+# add_subdirectory(backend/SPFresh) ?
 #
 # === SPFresh wrapper targets ===
 # Position-independent code helps when statics are linked into shared libs (Linux)
 set(SPFRESH_HDR_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(SPFRESH_SRC
-    src/spfresh_c_api.cpp
-)
+set(SPFRESH_SRC  ${CMAKE_CURRENT_SOURCE_DIR}/src/)
+set(SPFRESH_ANN  ${CMAKE_CURRENT_SOURCE_DIR}/../AnnService/inc/Core )
 
-add_library(spfresh_lib STATIC ${SPFRESH_SRC})
-set_target_properties(spfresh_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+add_library(spfresh_lib STATIC 
+          ${SPFRESH_SRC}/spfresh_c_api.cpp
+          ${SPFRESH_SRC}/index.cpp
+)
+set_target_properties(spfresh_lib PROPERTIES OUTPUT_NAME spfresh)
 
 target_include_directories(spfresh_lib
     PUBLIC
-        ${SPFRESH_HDR_DIR}
-        ${CMAKE_CURRENT_SOURCE_DIR}/Include  # SPTAG headers (if you include them later)
-)
+        ${SPFRESH_HDR_DIR}# SPTAG headers (if you include them later)
+        ${SPFRESH_ANN}
+        )
 
 # If your wrapper calls into SPTAG core, link it here. Replace AnnService if different.
 target_link_libraries(spfresh_lib
@@ -165,3 +168,4 @@ if (SPFRESH_BUILD_SHARED)
     target_link_libraries(spfresh_shared 
         PUBLIC AnnService)
 endif()
+

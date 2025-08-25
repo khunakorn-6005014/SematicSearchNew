@@ -35,7 +35,7 @@ pub struct Index {
 }
 
 impl Index {
-    /// Open (or create) the on-disk vector index
+    /// Open (or create) the on-disk vector index or in AnnService/src
     pub fn open(path: &str) -> Result<Self, IndexError> {
         let c_path = CString::new(path).unwrap();
         let mut handle: SPFHandle = ptr::null_mut();

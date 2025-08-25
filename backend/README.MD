@@ -13,9 +13,9 @@ The backend is a Rust/Axum service that manages an append-only vector index () a
 
 src/
 ├── main.rs
-├── error.rs
 ├── handlers/
 │   └── reviews.rs
+├── spfresh_ffi.rs
 └── store.rs
 
 • Vector index 
@@ -93,3 +93,7 @@ sudo apt install libisal-dev
 perl --version    
 cargo install cargo-leptos --locked    
 rustup target add wasm32-unknown-unknown  
+> Build SPFresh
+mkdir build && cd build
+cmake -DCMAKE_BUILD_TYPE=Release ..
+make -j
