@@ -60,6 +60,7 @@ fn main() {
     // if your C++ code uses the C++ standard library, link it too:
     println!("cargo:rustc-link-lib=dylib=stdc++");
     println!("cargo:rustc-link-lib=static=AnnService");
+    println!("cargo:rustc-link-lib=dylib=gomp");
     // re-run build.rs if any of these C++ sources or headers change
     println!("cargo:rerun-if-changed=SPFresh/src/spfresh_c_api.cpp");
     println!("cargo:rerun-if-changed=SPFresh/include/spfresh_c_api.h");
