@@ -1,10 +1,11 @@
 #pragma once
-///backend/SPFresh/include/spfresh/index.h
+///backend/SPFresh/include/spfresh/index.hpp
 #include <string>
 #include <vector>
 #include <utility>
 #include <cstdint>    // for std::int64_t
-
+#include <memory>
+#include "inc/Core/VectorIndex.h"   // for LoadIndex, BasicResult, QueryResult
 namespace spfresh {
 
 class Index {
@@ -20,10 +21,12 @@ public:
 
     // return up to k best (id,score) pairs
     std::vector<std::pair<std::int64_t, float>>
-    knn_search(const std::vector<float>& query, int k);
+        knn_search(const std::vector<float>& query, int k);
 
     // cleans up resources
     ~Index();
+private:
+    std::shared_ptr<SPTAG::VectorIndex> _core;
 };
 
 } // namespace spfresh
