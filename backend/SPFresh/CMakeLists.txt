@@ -158,7 +158,10 @@ target_link_libraries(spfresh_lib
 # Optionally build a shared library with the same interface
 option(SPFRESH_BUILD_SHARED "Build SPFresh as a shared library" OFF)
 if (SPFRESH_BUILD_SHARED)
-    add_library(spfresh_shared SHARED ${SPFRESH_SRC})
+    add_library(spfresh_shared SHARED 
+    ${SPFRESH_SRC}/spfresh_c_api.cpp
+        ${SPFRESH_SRC}/index.cpp
+    )
     set_target_properties(spfresh_shared PROPERTIES   
          POSITION_INDEPENDENT_CODE ON
     )
