@@ -17,8 +17,8 @@ fn main() {
     // Turn off Linux-specific and GPU pieces
    let dst = cfg.build();
     // 5) Determine where the archive actually lives
-    let lib_name = "libspfresh_lib.a";
-
+    //let lib_name = "libspfresh_lib.a";
+    let lib_name = "libspfresh.a";
     // 5a) Out-of-source build dir: <dst>/lib
     let candidate1 = dst.join("lib").join(lib_name);
     let candidate2 = spfresh_src.join("Release").join(lib_name);
