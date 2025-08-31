@@ -1,10 +1,12 @@
 // backend/src/spfresh_ffi.rs
-// use std::ffi::c_void;
+// use std::ffi::c_void; i64
 use std::{ffi::CString,ptr,};
 use libc::{c_char, c_float, c_int, int64_t};
 use crate::store::StoreError;
 #[repr(C)]
-pub struct SPFHandleOpaque;
+pub struct SPFHandleOpaque{
+    _unused: [u8; 0],
+}
 pub type SPFHandle = *mut SPFHandleOpaque;
 
 
@@ -33,7 +35,7 @@ pub enum IndexError {
 pub struct Index {
     handle: SPFHandle,
 }
-
+//int64_t i64
 impl Index {
     /// Open (or create) the on-disk vector index or in AnnService/src
     pub fn open(path: &str) -> Result<Self, IndexError> {
@@ -58,7 +60,7 @@ impl Index {
     }
 
     /// Append one vector under user-provided `id`
-    pub fn append_raw(&mut self, vec: &[f32], id: i64) -> Result<(), IndexError> {
+    pub fn append_raw(&mut self, vec: &[f32], id: int64_t) -> Result<(), IndexError> {
         let rc = unsafe {
             spf_add_vector(
                 self.handle,
@@ -120,7 +122,7 @@ impl VectorIndex for Index {
         let id = self.search_raw(vector, 1)
             .map_err(|e| StoreError::Index(format!("{:?}", e)))?
             .len() as u64;
-        self.append_raw(vector, id as i64)
+        self.append_raw(vector, id as int64_t)
             .map_err(|e| StoreError::Index(format!("{:?}", e)))?;
         Ok(id)
     }

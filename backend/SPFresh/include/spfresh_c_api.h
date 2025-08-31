@@ -1,7 +1,7 @@
 #ifndef SPFRESH_C_API_H
 #define SPFRESH_C_API_H
  //backend/SPFresh/include/spfresh_c_api.h
-#include <stdint.h>   // for int64_t
+#include <stdint.h>   // for int64_t i64
 
 #ifdef __cplusplus
 extern "C" {

@@ -4,15 +4,11 @@ mod spfresh_ffi;
 mod handler;
 
 use axum::{
-    extract::State,
     routing::{get, post},
     Router,
-  //  Server,           // ← Hyper server re-exported by Axum
+  //  Server,           // ← Hyper server re-exported by Axum int
 };   
-use std::{
-  net::SocketAddr,
-  sync::{Arc, Mutex},
-};
+use std::sync::{Arc, Mutex};
 
 use spfresh_ffi::Index;
 use store::Store;

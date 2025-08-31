@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <utility>
-#include <cstdint>    // for std::int64_t
+#include <cstdint>    // for std::int64_t i64
 #include <memory>
 #include "inc/Core/VectorIndex.h"   // for LoadIndex, BasicResult, QueryResult
 namespace spfresh {

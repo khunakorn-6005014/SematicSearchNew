@@ -2,15 +2,12 @@
 
 use axum::{extract::State, http::StatusCode, Json};
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 
 use crate::{AppState, store::ReviewMeta};
-use crate::store::Store;
-use crate::spfresh_ffi::Index;
 use crate::spfresh_ffi::VectorIndex;   
 
 /// Payload for single review
-/// Request payload for a single review insert
+/// Request payload for a single review insert int64_t i64
 #[derive(Debug, Deserialize)]
 pub struct NewReview {
     pub review_title:  String,

@@ -6,7 +6,7 @@
 #include <vector>
 #include <new>       // std::bad_alloc
 #include <exception> // std::exception
-#include <cstdint>   // for int64_t
+#include <cstdint>   // for int64_t i64
 
 using spfresh::Index;
 

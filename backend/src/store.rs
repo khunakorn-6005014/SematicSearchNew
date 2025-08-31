@@ -1,15 +1,14 @@
 //backend/src/store.rs
-use fs2::FileExt;
 use serde::{Deserialize, Serialize};
 use std::{
     fs::{File, OpenOptions},
     io::{BufRead, BufReader, Read, Seek, SeekFrom, Write},
     path::{Path, PathBuf},
-    sync::{Arc, Mutex, RwLock},
+    sync::{Mutex, RwLock},
 };
 use thiserror::Error;
 
-// Metadata record type
+// Metadata record type i64 int64_t
 #[derive(Debug,Serialize, Deserialize, Clone)]
 pub struct ReviewMeta {
     pub review_title: String,
@@ -61,7 +60,7 @@ impl MetadataStore {
         let jsonl_path = dir.join("reviews.jsonl");
         let offsets_path = dir.join("reviews.offsets");
         // Open index file
-        let mut jsonl_file = OpenOptions::new()
+        let jsonl_file = OpenOptions::new()
             .read(true)
             .append(true)
             .create(true)
