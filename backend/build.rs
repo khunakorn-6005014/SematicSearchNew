@@ -39,6 +39,8 @@ fn main() {
     println!("cargo:warning=linking with static library in `{}`", lib_dir.display());
     println!("cargo:rustc-link-search=native={}", lib_dir.display());
   //  println!("cargo:rustc-link-lib=static=spfresh_lib");
+//  println!("cargo:rustc-link-arg=-Wl,-rpath,$ORIGIN/Release");
+
    println!("cargo:rustc-link-lib=static=spfresh");
 //sdf
     println!("cargo:rustc-link-lib=static=SPTAGLibStatic");

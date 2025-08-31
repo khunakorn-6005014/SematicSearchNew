@@ -59,7 +59,7 @@ impl MetadataStore {
 
         let jsonl_path = dir.join("reviews.jsonl");
         let offsets_path = dir.join("reviews.offsets");
-        // Open index file
+        // Open index file /jsonl_path
         let jsonl_file = OpenOptions::new()
             .read(true)
             .append(true)
