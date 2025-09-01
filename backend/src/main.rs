@@ -8,8 +8,9 @@ use axum::{
     Router,
   //  Server,           // ← Hyper server re-exported by Axum int
 };   
-use std::sync::{Arc, Mutex};
-
+//use std::sync::{Arc, Mutex};
+use std::{path::Path, sync::{Arc, Mutex}};
+use tokio::net::TcpListener;//add
 use spfresh_ffi::Index;
 use store::Store;
 //use crate::embedder::Embedder;
@@ -31,13 +32,45 @@ async fn main(){
   
     // Initialize shared components
    // open (or create) the on-disk index
-    let idx = Index::open("data/reviews.index")
-        .expect("failed to open or create vector index");
-
+//     let idx = Index::open("data/reviews.index") 
+//         .expect("failed to open or create vector index");
+//    eprintln!("Opening index at path: {:?}", idx);
+       let idx_path = Path::new("data").join("reviews.index");
+    println!("→ Opening vector index at {:?}", idx_path);
+        if let Some(parent) = idx_path.parent() {
+        std::fs::create_dir_all(parent)
+            .unwrap_or_else(|e| panic!("failed to create {:?}: {}", parent, e));
+    }
+    let idx_path_str = idx_path.to_str().unwrap();
+    let idx = match Index::open(idx_path_str) {
+     Ok(ix) => {
+        println!("✔ Loaded existing index");
+        ix
+    }
+    Err(e) => {
+        eprintln!(
+            "Index::open failed with {:?}. Creating new index at {}",
+            e, idx_path_str
+        );
+        // ← Replace `Index::create` with the actual SPFresh FFI constructor
+        let new_ix = Index::create(idx_path_str)
+            .expect("failed to create new vector index");
+        println!("✔ New index initialized");
+        new_ix
+    }
+};
+    println!("✔ Vector index ready");
     // open (or create) the metadata files
-    let store = Store::open("data")
+    // let store = Store::open("data")
+    //     .expect("failed to open or create metadata store");
+   let meta_dir = Path::new("data");
+    println!("→ Opening metadata store at {:?}", meta_dir);
+    std::fs::create_dir_all(meta_dir)
+        .unwrap_or_else(|e| panic!("failed to create {:?}: {}", meta_dir, e));
+    let store = Store::open(meta_dir)
         .expect("failed to open or create metadata store");
-
+    println!("✔ Metadata store ready");
+     // Build shared state
     let state = AppState {
         index: Arc::new(Mutex::new(idx)),
         meta: Arc::new(store),
@@ -51,15 +84,6 @@ async fn main(){
         .route("/health",       get(|| async { "OK" }))
         .with_state(state);
 
-   // Start server
-  // Bind to a SocketAddr (not &str)
-   // let addr: SocketAddr = "0.0.0.0:8080".parse().unwrap();
-   // let addr = SocketAddr::from(([0, 0, 0, 0], 8080));
-      //println!("Listening on {}", addr);
-//     axum::Server::bind(&"0.0.0.0:8080".parse().unwrap())
-//         .serve(app.into_make_service())
-//         .await
-//         .unwrap();
  let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
   println!("server listen on port : {}", listener.local_addr().unwrap());
   axum::serve(listener, app).await.unwrap();

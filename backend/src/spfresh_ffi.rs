@@ -22,6 +22,9 @@ extern "C" {// C ABI entrypoints from your spfresh_c_api.h
         out_scores: *mut c_float,
     ) -> c_int;
     pub fn spf_close(handle: SPFHandle) -> c_int;
+    pub fn create(path: &str) -> Result<Self, CError> {
+        // call into the C‐API to initialize a fresh index file
+    }
 }
 
 /// Pure-Rust error type for vector indexing.
