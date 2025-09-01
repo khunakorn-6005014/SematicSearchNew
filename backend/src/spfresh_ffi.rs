@@ -3,6 +3,7 @@
 use std::{ffi::CString,ptr,};
 use libc::{c_char, c_float, c_int, int64_t};
 use crate::store::StoreError;
+//use crate::spfresh_ffi::IndexError;//add
 #[repr(C)]
 pub struct SPFHandleOpaque{
     _unused: [u8; 0],
@@ -22,18 +23,17 @@ extern "C" {// C ABI entrypoints from your spfresh_c_api.h
         out_scores: *mut c_float,
     ) -> c_int;
     pub fn spf_close(handle: SPFHandle) -> c_int;
-    pub fn create(path: &str) -> Result<Self, CError> {
-        // call into the C‐API to initialize a fresh index file
-    }
+    
 }
 
 /// Pure-Rust error type for vector indexing.
 #[derive(Debug)]
 pub enum IndexError {
     CError(c_int),
-    NullHandle,
+    NullHandle, 
 }
-
+/// Failed to convert Rust &str into a C-compatible string
+ //  InvalidCString,
 /// Safe wrapper around the native handle
 pub struct Index {
     handle: SPFHandle,
@@ -61,7 +61,7 @@ impl Index {
             self.handle = ptr::null_mut();
         }
     }
-
+    
     /// Append one vector under user-provided `id`
     pub fn append_raw(&mut self, vec: &[f32], id: int64_t) -> Result<(), IndexError> {
         let rc = unsafe {
@@ -102,6 +102,25 @@ impl Index {
             .map(|(i, s)| (i as usize, s))
             .collect())
     }
+    // pub fn create(path: &str) -> Result<Self, IndexError> {
+    //     // Convert Rust str -> C string
+    //     let c_path = CString::new(path)
+    //         .map_err(|_| IndexError::InvalidArgument)?;
+
+    //     // Prepare an uninitialized handle
+    //     let mut handle: SPFHandle = ptr::null_mut();
+
+    //     // Call the underlying C-API. Replace `spf_init` with the correct create fn if different.
+    //     let code: c_int = unsafe { spf_init_index(c_path.as_ptr(), &mut handle) };
+
+    //     // Non-zero = error
+    //     if code != 0 {
+    //         Err(IndexError::CError(code))
+    //     } else {
+    //        // Ok(Index(handle))
+    //         Ok(Index { handle })
+    //     }
+    // }
 }
 
 impl Drop for Index {
